@@ -9,8 +9,8 @@ public class AuditRevisionListener implements RevisionListener {
     @Override
     public void newRevision(Object object) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AuditRevision enversRevision = (AuditRevision) object;
-        enversRevision.setUsername(user.getUsername());
+        AuditRevision auditRevision = (AuditRevision) object;
+        auditRevision.setUsername(user.getUsername());
     }
 
 }

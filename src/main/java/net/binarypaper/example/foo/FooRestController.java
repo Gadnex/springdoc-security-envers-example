@@ -6,6 +6,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import net.binarypaper.example.config.AuditRevision;
+import net.binarypaper.example.config.AuditRevisionHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,4 +81,14 @@ public class FooRestController {
         em.flush();
     }
 
+    @GetMapping("{id}/revisions")
+    @JsonView(AuditRevision.class)
+    public List<Foo> getFooAuditRevisions(@PathVariable Long id) {
+        AuditRevisionHelper<Foo> auditRevisionHelper = new AuditRevisionHelper<>(Foo.class);
+        List<Foo> revisions = auditRevisionHelper.getAllAuditRevisions(em, id);
+        if (revisions.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid foo id");
+        }
+        return revisions;
+    }
 }
