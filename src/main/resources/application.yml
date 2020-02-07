@@ -1,0 +1,17 @@
+spring:
+    h2:
+        console:
+            enabled: true
+            
+    security:
+        user:
+            name: willy
+            password: willy
+            roles: 
+                - user
+                - admin
+
+application:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
