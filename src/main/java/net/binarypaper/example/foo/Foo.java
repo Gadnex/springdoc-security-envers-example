@@ -13,6 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import net.binarypaper.example.config.AuditRevision;
 import org.hibernate.envers.Audited;
@@ -33,25 +34,36 @@ public class Foo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView({List.class, All.class, Update.class, AuditRevision.class})
+    @Schema(
+            description = "The unique identifier of the Foo",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
     private Long id;
 
     @Version
     @JsonView({All.class, Update.class})
+    @Schema(
+            description = "The version of the Foo only used for concurrency control when updating database",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
     private Integer version;
 
+    @NotNull
     @JsonView({Add.class, List.class, All.class, Update.class, AuditRevision.class})
+    @Schema(description = "The name of the Foo")
     private String name;
 
     @JsonView({Add.class, All.class, Update.class, AuditRevision.class})
+    @Schema(description = "The description of the Foo")
     private String description;
-    
+
     // JPA Annotations
     @Transient
     // Jackson annotations
     @JsonView({AuditRevision.class})
     // OpenAPI annotations
     @Schema(
-            description = "The the audit revision details",
+            description = "The audit revision details",
             accessMode = Schema.AccessMode.READ_ONLY
     )
     private AuditRevision revision;
